@@ -40,3 +40,9 @@ symfony serve
 ```bash
 composer update "symfony/*" --with-all-dependencies
 ```
+
+### Development
+
+```bash
+XDEBUG_MODE=coverage ./bin/phpunit --coverage-html=var/coverage
+```
