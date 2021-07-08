@@ -3,6 +3,7 @@
 ---
 
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net/migration74)
+[![Build Status](https://travis-ci.com/etraxis/etraxis.svg?branch=master)](https://travis-ci.com/etraxis/etraxis)
 
 eTraxis is an issue tracking system with ability to set up an unlimited number of customizable workflows.
 It can be used to track almost anything, though the most popular cases are a *bug tracker* and a *help desk system*.
