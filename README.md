@@ -2,6 +2,8 @@
 ### THE PROJECT IS UNDER PROGRESS AND IS NOT READY YET
 ---
 
+[![PHP](https://img.shields.io/badge/PHP-7.4%2B-blue.svg)](https://php.net/migration74)
+
 eTraxis is an issue tracking system with ability to set up an unlimited number of customizable workflows.
 It can be used to track almost anything, though the most popular cases are a *bug tracker* and a *help desk system*.
 
@@ -19,3 +21,22 @@ It can be used to track almost anything, though the most popular cases are a *bu
 * Localization and multilingual support
 * Mobile-friendly web interface
 * and more...
+
+### Prerequisites
+
+* [PHP](https://php.net/)
+* [Composer](https://getcomposer.org/)
+* [Symfony](https://symfony.com/download)
+
+### Install
+
+```bash
+composer install
+symfony serve
+```
+
+### Upgrade
+
+```bash
+composer update "symfony/*" --with-all-dependencies
+```
