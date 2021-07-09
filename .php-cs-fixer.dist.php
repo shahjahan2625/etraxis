@@ -27,8 +27,10 @@ return (new PhpCsFixer\Config())
         //--------------------------------------------------------------
         'binary_operator_spaces'     => ['default' => 'align'],
         'braces'                     => false,
+        'concat_space'               => ['spacing' => 'one'],
         'declare_strict_types'       => false,
         'native_function_invocation' => false,
+        'no_extra_blank_lines'       => true,
         'self_static_accessor'       => true,
     ])
     ->setFinder($finder)
