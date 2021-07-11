@@ -19,25 +19,25 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @internal
- * @coversDefaultClass \App\Controller\DefaultController
+ * @coversDefaultClass \App\Controller\LoginController
  */
-final class DefaultControllerTest extends WebTestCase
+final class LoginControllerTest extends WebTestCase
 {
     /**
-     * @covers ::homepage
+     * @covers ::index
      */
-    public function testHomepageAnon(): void
+    public function testIndexAnon(): void
     {
         $client = self::createClient();
-        $client->request(Request::METHOD_GET, '/');
+        $client->request(Request::METHOD_GET, '/login');
 
-        self::assertTrue($client->getResponse()->isRedirect('/login'));
+        self::assertTrue($client->getResponse()->isOk());
     }
 
     /**
-     * @covers ::homepage
+     * @covers ::index
      */
-    public function testHomepageUser(): void
+    public function testIndexUser(): void
     {
         $client   = self::createClient();
         $doctrine = self::getContainer()->get('doctrine');
@@ -45,8 +45,8 @@ final class DefaultControllerTest extends WebTestCase
         $user = $doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
 
         $client->loginUser($user);
-        $client->request(Request::METHOD_GET, '/');
+        $client->request(Request::METHOD_GET, '/login');
 
-        self::assertTrue($client->getResponse()->isOk());
+        self::assertTrue($client->getResponse()->isRedirect('/'));
     }
 }

@@ -8,6 +8,11 @@
         {% block styles %}{% endblock %}
     </head>
     <body>
+        <header>
+            {% if app.user %}
+                <a href="{{ path('logout') }}">Log out</a>
+            {% endif %}
+        </header>
         <main>
             {% block content %}{% endblock %}
         </main>

@@ -32,6 +32,7 @@ return (new PhpCsFixer\Config())
         'native_function_invocation' => false,
         'no_extra_blank_lines'       => true,
         'self_static_accessor'       => true,
+        'yoda_style'                 => false,
     ])
     ->setFinder($finder)
 ;

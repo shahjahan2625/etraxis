@@ -18,12 +18,23 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Bundle\FixturesBundle\FixtureGroupInterface;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Fixtures for first-time deployment to production.
  */
 class ProductionFixtures extends Fixture implements FixtureInterface, FixtureGroupInterface
 {
+    protected UserPasswordHasherInterface $hasher;
+
+    /**
+     * @codeCoverageIgnore Dependency Injection constructor
+     */
+    public function __construct(UserPasswordHasherInterface $hasher)
+    {
+        $this->hasher = $hasher;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -41,7 +52,7 @@ class ProductionFixtures extends Fixture implements FixtureInterface, FixtureGro
 
         $user
             ->setEmail('admin@example.com')
-            ->setPassword('secret')
+            ->setPassword($this->hasher->hashPassword($user, 'secret'))
             ->setFullname('eTraxis Admin')
             ->setDescription('Built-in administrator')
         ;

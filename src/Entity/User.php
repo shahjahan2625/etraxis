@@ -15,6 +15,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User.
@@ -22,8 +24,11 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
  */
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    // Roles.
+    public const ROLE_USER = 'ROLE_USER';
+
     // Constraints.
     public const MAX_EMAIL       = 254;
     public const MAX_FULLNAME    = 50;
@@ -65,6 +70,49 @@ class User
      * @ORM\Column(name="description", type="string", length=100, nullable=true)
      */
     protected ?string $description = null;
+
+    /**
+     * @codeCoverageIgnore Deprecated since Symfony 5.3
+     *
+     * @todo Remove in Symfony 6.0
+     */
+    public function getUsername(): string
+    {
+        return $this->getUserIdentifier();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getUserIdentifier(): string
+    {
+        return $this->getEmail();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getRoles(): array
+    {
+        return [self::ROLE_USER];
+    }
+
+    /**
+     * @codeCoverageIgnore Deprecated since Symfony 5.3
+     *
+     * @todo Remove in Symfony 6.0
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @codeCoverageIgnore Empty implementation
+     */
+    public function eraseCredentials(): void
+    {
+    }
 
     /**
      * Property getter.

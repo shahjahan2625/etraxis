@@ -25,6 +25,27 @@ final class UserTest extends TestCase
     use ReflectionTrait;
 
     /**
+     * @covers ::getUserIdentifier
+     */
+    public function testGetUserIdentifier(): void
+    {
+        $user = new User();
+
+        $user->setEmail('anna@example.com');
+        self::assertSame('anna@example.com', $user->getUserIdentifier());
+    }
+
+    /**
+     * @covers ::getRoles
+     */
+    public function testRoles(): void
+    {
+        $user = new User();
+
+        self::assertSame([User::ROLE_USER], $user->getRoles());
+    }
+
+    /**
      * @covers ::getId
      */
     public function testId(): void

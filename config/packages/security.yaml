@@ -2,6 +2,10 @@ security:
 
     enable_authenticator_manager: true
 
+    password_hashers:
+        App\Entity\User:
+            algorithm: auto
+
     providers:
         users_in_database:
             entity:
@@ -14,6 +18,12 @@ security:
             security: false
         main:
             lazy: true
+            logout: true
             provider: users_in_database
+            entry_point: App\Security\AuthenticationEntryPoint
+            custom_authenticators:
+                - App\Security\LoginFormAuthenticator
 
     access_control:
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/,      roles: ROLE_USER     }
