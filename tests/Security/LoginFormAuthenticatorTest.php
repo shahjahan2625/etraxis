@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
@@ -130,6 +131,7 @@ final class LoginFormAuthenticatorTest extends TestCase
         self::assertTrue($passport->hasBadge(UserBadge::class));
         self::assertTrue($passport->hasBadge(PasswordCredentials::class));
         self::assertTrue($passport->hasBadge(CsrfTokenBadge::class));
+        self::assertTrue($passport->hasBadge(RememberMeBadge::class));
 
         /** @var UserBadge $badge */
         $badge = $passport->getBadge(UserBadge::class);
