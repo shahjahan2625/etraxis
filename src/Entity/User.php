@@ -14,6 +14,7 @@
 namespace App\Entity;
 
 use App\Dictionary\Locale;
+use App\Dictionary\Timezone;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
@@ -253,6 +254,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (Locale::has($locale)) {
             $this->settings['locale'] = $locale;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function getTimezone(): string
+    {
+        return $this->settings['timezone'] ?? Timezone::FALLBACK;
+    }
+
+    /**
+     * Property setter.
+     */
+    public function setTimezone(string $timezone): self
+    {
+        if (Timezone::has($timezone)) {
+            $this->settings['timezone'] = $timezone;
         }
 
         return $this;

@@ -59,6 +59,7 @@ class ProductionFixtures extends Fixture implements FixtureInterface, FixtureGro
             ->setDescription('Built-in administrator')
             ->setAdmin(true)
             ->setLocale($this->locale)
+            ->setTimezone(date_default_timezone_get())
         ;
 
         $manager->persist($user);

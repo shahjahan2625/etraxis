@@ -149,4 +149,20 @@ final class UserTest extends TestCase
         $user->setLocale('xx');
         self::assertSame('ru', $user->getLocale());
     }
+
+    /**
+     * @covers ::getTimezone
+     * @covers ::setTimezone
+     */
+    public function testTimezone(): void
+    {
+        $user = new User();
+        self::assertSame('UTC', $user->getTimezone());
+
+        $user->setTimezone('Pacific/Auckland');
+        self::assertSame('Pacific/Auckland', $user->getTimezone());
+
+        $user->setTimezone('Unknown');
+        self::assertSame('Pacific/Auckland', $user->getTimezone());
+    }
 }
