@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app.user.locale ?? locale }}" dir="{{ (app.user.locale ?? locale) | direction }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,7 +10,7 @@
     <body>
         <header>
             {% if app.user %}
-                <a href="{{ path('logout') }}">Log out</a>
+                <a href="{{ path('logout') }}">{{ 'security.logout' | trans }}</a>
             {% endif %}
         </header>
         <main>

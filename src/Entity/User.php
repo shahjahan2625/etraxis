@@ -13,8 +13,10 @@
 
 namespace App\Entity;
 
+use App\Dictionary\Locale;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -23,6 +25,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
+ * @Assert\UniqueEntity(fields={"email"}, message="user.conflict.email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -78,6 +81,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(name="admin", type="boolean")
      */
     protected bool $admin;
+
+    /**
+     * User's settings.
+     *
+     * @ORM\Column(name="settings", type="json", nullable=true)
+     */
+    protected ?array $settings = null;
 
     /**
      * Creates new user.
@@ -224,6 +234,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAdmin(bool $admin): self
     {
         $this->admin = $admin;
+
+        return $this;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function getLocale(): string
+    {
+        return $this->settings['locale'] ?? Locale::FALLBACK;
+    }
+
+    /**
+     * Property setter.
+     */
+    public function setLocale(string $locale): self
+    {
+        if (Locale::has($locale)) {
+            $this->settings['locale'] = $locale;
+        }
 
         return $this;
     }

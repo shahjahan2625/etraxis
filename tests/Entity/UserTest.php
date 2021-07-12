@@ -133,4 +133,20 @@ final class UserTest extends TestCase
         $user->setAdmin(false);
         self::assertFalse($user->isAdmin());
     }
+
+    /**
+     * @covers ::getLocale
+     * @covers ::setLocale
+     */
+    public function testLocale(): void
+    {
+        $user = new User();
+        self::assertSame('en', $user->getLocale());
+
+        $user->setLocale('ru');
+        self::assertSame('ru', $user->getLocale());
+
+        $user->setLocale('xx');
+        self::assertSame('ru', $user->getLocale());
+    }
 }

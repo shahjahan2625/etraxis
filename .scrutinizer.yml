@@ -12,6 +12,7 @@ filter:
         - public/
         - templates/
         - tests/
+        - translations/
         - var/
     dependency_paths:
         - vendor/

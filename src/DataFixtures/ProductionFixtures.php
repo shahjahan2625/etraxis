@@ -26,13 +26,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class ProductionFixtures extends Fixture implements FixtureInterface, FixtureGroupInterface
 {
     protected UserPasswordHasherInterface $hasher;
+    protected string                      $locale;
 
     /**
      * @codeCoverageIgnore Dependency Injection constructor
      */
-    public function __construct(UserPasswordHasherInterface $hasher)
+    public function __construct(UserPasswordHasherInterface $hasher, string $locale)
     {
         $this->hasher = $hasher;
+        $this->locale = $locale;
     }
 
     /**
@@ -56,6 +58,7 @@ class ProductionFixtures extends Fixture implements FixtureInterface, FixtureGro
             ->setFullname('eTraxis Admin')
             ->setDescription('Built-in administrator')
             ->setAdmin(true)
+            ->setLocale($this->locale)
         ;
 
         $manager->persist($user);
