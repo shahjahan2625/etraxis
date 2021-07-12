@@ -25,6 +25,16 @@ final class UserTest extends TestCase
     use ReflectionTrait;
 
     /**
+     * @covers ::__construct
+     */
+    public function testConstructor(): void
+    {
+        $user = new User();
+
+        self::assertFalse($user->isAdmin());
+    }
+
+    /**
      * @covers ::getUserIdentifier
      */
     public function testGetUserIdentifier(): void
@@ -41,8 +51,10 @@ final class UserTest extends TestCase
     public function testRoles(): void
     {
         $user = new User();
-
         self::assertSame([User::ROLE_USER], $user->getRoles());
+
+        $user->setAdmin(true);
+        self::assertSame([User::ROLE_ADMIN], $user->getRoles());
     }
 
     /**
@@ -104,5 +116,21 @@ final class UserTest extends TestCase
 
         $user->setDescription('Very lovely daughter');
         self::assertSame('Very lovely daughter', $user->getDescription());
+    }
+
+    /**
+     * @covers ::isAdmin
+     * @covers ::setAdmin
+     */
+    public function testAdmin(): void
+    {
+        $user = new User();
+        self::assertFalse($user->isAdmin());
+
+        $user->setAdmin(true);
+        self::assertTrue($user->isAdmin());
+
+        $user->setAdmin(false);
+        self::assertFalse($user->isAdmin());
     }
 }

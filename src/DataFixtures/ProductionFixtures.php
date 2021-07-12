@@ -55,6 +55,7 @@ class ProductionFixtures extends Fixture implements FixtureInterface, FixtureGro
             ->setPassword($this->hasher->hashPassword($user, 'secret'))
             ->setFullname('eTraxis Admin')
             ->setDescription('Built-in administrator')
+            ->setAdmin(true)
         ;
 
         $manager->persist($user);

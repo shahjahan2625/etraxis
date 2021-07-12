@@ -26,6 +26,10 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
 
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+
     access_control:
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/,      roles: ROLE_USER     }
+        - { path: ^/login,  roles: PUBLIC_ACCESS }
+        - { path: ^/admin/, roles: ROLE_ADMIN    }
+        - { path: ^/,       roles: ROLE_USER     }

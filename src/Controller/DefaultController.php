@@ -23,11 +23,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
-     * Default page.
+     * Default page for public area.
      *
      * @Route("/", name="homepage")
      */
     public function homepage(): Response
+    {
+        return $this->render('base.html.twig');
+    }
+
+    /**
+     * Default page for admin area.
+     *
+     * @Route("/admin/", name="admin")
+     */
+    public function admin(): Response
     {
         return $this->render('base.html.twig');
     }

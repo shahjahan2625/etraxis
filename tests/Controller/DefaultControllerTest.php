@@ -49,4 +49,47 @@ final class DefaultControllerTest extends WebTestCase
 
         self::assertTrue($client->getResponse()->isOk());
     }
+
+    /**
+     * @covers ::admin
+     */
+    public function testAdminAnon(): void
+    {
+        $client = self::createClient();
+        $client->request(Request::METHOD_GET, '/admin/');
+
+        self::assertTrue($client->getResponse()->isRedirect('/login'));
+    }
+
+    /**
+     * @covers ::admin
+     */
+    public function testAdminUser(): void
+    {
+        $client   = self::createClient();
+        $doctrine = self::getContainer()->get('doctrine');
+
+        $user = $doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
+
+        $client->loginUser($user);
+        $client->request(Request::METHOD_GET, '/admin/');
+
+        self::assertTrue($client->getResponse()->isForbidden());
+    }
+
+    /**
+     * @covers ::admin
+     */
+    public function testAdminAdmin(): void
+    {
+        $client   = self::createClient();
+        $doctrine = self::getContainer()->get('doctrine');
+
+        $user = $doctrine->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+
+        $client->loginUser($user);
+        $client->request(Request::METHOD_GET, '/admin/');
+
+        self::assertTrue($client->getResponse()->isOk());
+    }
 }

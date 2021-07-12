@@ -27,7 +27,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     // Roles.
-    public const ROLE_USER = 'ROLE_USER';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
+    public const ROLE_USER  = 'ROLE_USER';
 
     // Constraints.
     public const MAX_EMAIL       = 254;
@@ -72,6 +73,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?string $description = null;
 
     /**
+     * Whether the user has administration privileges.
+     *
+     * @ORM\Column(name="admin", type="boolean")
+     */
+    protected bool $admin;
+
+    /**
+     * Creates new user.
+     */
+    public function __construct()
+    {
+        $this->admin = false;
+    }
+
+    /**
      * @codeCoverageIgnore Deprecated since Symfony 5.3
      *
      * @todo Remove in Symfony 6.0
@@ -94,7 +110,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        return [self::ROLE_USER];
+        return [$this->admin ? self::ROLE_ADMIN : self::ROLE_USER];
     }
 
     /**
@@ -190,6 +206,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->admin;
+    }
+
+    /**
+     * Property setter.
+     */
+    public function setAdmin(bool $admin): self
+    {
+        $this->admin = $admin;
 
         return $this;
     }
