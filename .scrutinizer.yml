@@ -10,6 +10,7 @@ filter:
         - bin/
         - config/
         - public/
+        - src/Kernel.php
         - templates/
         - tests/
         - translations/

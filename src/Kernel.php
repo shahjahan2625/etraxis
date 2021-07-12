@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection ALL */
+
 namespace App;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
