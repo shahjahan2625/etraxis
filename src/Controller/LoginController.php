@@ -14,24 +14,36 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 /**
  * Login controller.
  */
 class LoginController extends AbstractController
 {
+    use TargetPathTrait;
+
     /**
      * Login page.
      *
      * @Route("/login", name="login")
      */
-    public function index(AuthenticationUtils $utils): Response
+    public function index(Request $request, TokenStorageInterface $tokenStorage, AuthenticationUtils $utils): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('homepage');
+            /** @var PostAuthenticationToken $token */
+            $token        = $tokenStorage->getToken();
+            $firewallName = $token->getFirewallName();
+            $targetPath   = $this->getTargetPath($request->getSession(), $firewallName);
+
+            return new RedirectResponse($targetPath ?? $this->generateUrl('homepage'));
         }
 
         return $this->render('security/login.html.twig', [

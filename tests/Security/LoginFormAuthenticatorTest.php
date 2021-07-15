@@ -15,9 +15,7 @@ namespace App\Security;
 
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -149,55 +147,17 @@ final class LoginFormAuthenticatorTest extends TestCase
     /**
      * @covers ::onAuthenticationSuccess
      */
-    public function testOnAuthenticationSuccessWithTargetPath(): void
+    public function testOnAuthenticationSuccess(): void
     {
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->method('get')
-            ->with('_security.main.target_path', null)
-            ->willReturn('/profile')
-        ;
-
         $request = new Request([], [
             'email'    => 'admin@example.com',
             'password' => 'secret',
         ]);
 
-        $request->setSession($session);
-
         $token    = new PostAuthenticationToken(new User(), 'main', [User::ROLE_USER]);
         $response = $this->authenticator->onAuthenticationSuccess($request, $token, 'main');
 
-        self::assertInstanceOf(RedirectResponse::class, $response);
-        self::assertSame(Response::HTTP_FOUND, $response->getStatusCode());
-        self::assertTrue($response->isRedirect('/profile'));
-    }
-
-    /**
-     * @covers ::onAuthenticationSuccess
-     */
-    public function testOnAuthenticationSuccessNoTargetPath(): void
-    {
-        $session = $this->createMock(SessionInterface::class);
-        $session
-            ->method('get')
-            ->with('_security.main.target_path', null)
-            ->willReturn(null)
-        ;
-
-        $request = new Request([], [
-            'email'    => 'admin@example.com',
-            'password' => 'secret',
-        ]);
-
-        $request->setSession($session);
-
-        $token    = new PostAuthenticationToken(new User(), 'main', [User::ROLE_USER]);
-        $response = $this->authenticator->onAuthenticationSuccess($request, $token, 'main');
-
-        self::assertInstanceOf(RedirectResponse::class, $response);
-        self::assertSame(Response::HTTP_FOUND, $response->getStatusCode());
-        self::assertTrue($response->isRedirect('/'));
+        self::assertNull($response);
     }
 
     /**
@@ -226,8 +186,6 @@ final class LoginFormAuthenticatorTest extends TestCase
 
         $response = $this->authenticator->onAuthenticationFailure($request, $exception);
 
-        self::assertInstanceOf(RedirectResponse::class, $response);
-        self::assertSame(Response::HTTP_FOUND, $response->getStatusCode());
-        self::assertTrue($response->isRedirect('/login'));
+        self::assertNull($response);
     }
 }

@@ -13,7 +13,6 @@
 
 namespace App\Security;
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -28,15 +27,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
-use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 /**
  * Authenticates users using eTraxis database.
  */
 class LoginFormAuthenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
-    use TargetPathTrait;
-
     protected UrlGeneratorInterface $urlGenerator;
 
     /**
@@ -81,9 +77,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator implements Authentica
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
-
-        return new RedirectResponse($targetPath ?? $this->urlGenerator->generate('homepage'));
+        return null;
     }
 
     /**
@@ -96,6 +90,6 @@ class LoginFormAuthenticator extends AbstractAuthenticator implements Authentica
             $request->getSession()->set(Security::LAST_USERNAME, $request->request->get('email'));
         }
 
-        return new RedirectResponse($this->urlGenerator->generate('login'));
+        return null;
     }
 }

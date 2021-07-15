@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 
 /**
  * @internal
@@ -27,7 +28,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
  */
 final class AuthenticationEntryPointTest extends TestCase
 {
-    private AuthenticationEntryPoint $entryPoint;
+    private AuthenticationEntryPointInterface $entryPoint;
 
     protected function setUp(): void
     {
