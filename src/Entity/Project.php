@@ -79,6 +79,14 @@ class Project
     protected Collection $groups;
 
     /**
+     * List of project templates.
+     *
+     * @ORM\OneToMany(targetEntity=Template::class, mappedBy="project", orphanRemoval=true)
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected Collection $templates;
+
+    /**
      * Creates new project.
      */
     public function __construct()
@@ -86,7 +94,8 @@ class Project
         $this->createdAt   = time();
         $this->isSuspended = false;
 
-        $this->groups = new ArrayCollection();
+        $this->groups    = new ArrayCollection();
+        $this->templates = new ArrayCollection();
     }
 
     /**
@@ -167,5 +176,15 @@ class Project
     public function getGroups(): Collection
     {
         return $this->groups;
+    }
+
+    /**
+     * Property getter.
+     *
+     * @return Collection|Template[]
+     */
+    public function getTemplates(): Collection
+    {
+        return $this->templates;
     }
 }

@@ -34,6 +34,7 @@ final class ProjectTest extends TestCase
         self::assertLessThanOrEqual(2, time() - $project->getCreatedAt());
         self::assertFalse($project->isSuspended());
         self::assertEmpty($project->getGroups());
+        self::assertEmpty($project->getTemplates());
     }
 
     /**
@@ -112,5 +113,21 @@ final class ProjectTest extends TestCase
         $groups->add('Group B');
 
         self::assertSame(['Group A', 'Group B'], $project->getGroups()->getValues());
+    }
+
+    /**
+     * @covers ::getTemplates
+     */
+    public function testTemplates(): void
+    {
+        $project = new Project();
+        self::assertEmpty($project->getTemplates());
+
+        /** @var \Doctrine\Common\Collections\Collection $templates */
+        $templates = $this->getProperty($project, 'templates');
+        $templates->add('Template A');
+        $templates->add('Template B');
+
+        self::assertSame(['Template A', 'Template B'], $project->getTemplates()->getValues());
     }
 }

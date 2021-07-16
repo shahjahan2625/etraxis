@@ -1,5 +1,22 @@
+role.any: 'Любой пользователь'
+role.author: Автор
+role.responsible: Ответственный
 security.login: Войти
 security.logout: Выйти
 security.remember_me: 'Запомнить меня'
+template.permission.add_comments: 'Добавление комментариев'
+template.permission.add_dependencies: 'Добавление зависимостей'
+template.permission.attach_files: 'Добавление файлов'
+template.permission.create_issues: 'Создание записей'
+template.permission.delete_files: 'Удаление файлов'
+template.permission.delete_issues: 'Удаление записей'
+template.permission.edit_issues: 'Редактирование записей'
+template.permission.private_comments: 'Добавление/чтение приватных комментариев'
+template.permission.reassign_issues: 'Переназначение записей'
+template.permission.remove_dependencies: 'Удаление зависимостей'
+template.permission.resume_issues: 'Возобновление записей'
+template.permission.send_reminders: 'Рассылка напоминаний'
+template.permission.suspend_issues: 'Откладывание записей'
+template.permission.view_issues: 'Просмотр записей'
 user.email: 'Эл. почта'
 user.password: Пароль
