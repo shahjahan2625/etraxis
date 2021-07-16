@@ -103,6 +103,14 @@ class Template
     protected bool $isLocked;
 
     /**
+     * List of template states.
+     *
+     * @ORM\OneToMany(targetEntity=State::class, mappedBy="template", orphanRemoval=true)
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected Collection $states;
+
+    /**
      * List of template role permissions.
      *
      * @ORM\OneToMany(targetEntity=TemplateRolePermission::class, mappedBy="template", orphanRemoval=true)
@@ -124,6 +132,7 @@ class Template
         $this->project  = $project;
         $this->isLocked = true;
 
+        $this->states           = new ArrayCollection();
         $this->rolePermissions  = new ArrayCollection();
         $this->groupPermissions = new ArrayCollection();
     }
@@ -250,6 +259,16 @@ class Template
         $this->isLocked = $isLocked;
 
         return $this;
+    }
+
+    /**
+     * Property getter.
+     *
+     * @return Collection|State[]
+     */
+    public function getStates(): Collection
+    {
+        return $this->states;
     }
 
     /**

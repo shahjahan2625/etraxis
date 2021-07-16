@@ -34,6 +34,7 @@ final class TemplateTest extends TestCase
 
         self::assertSame($project, $template->getProject());
         self::assertTrue($template->isLocked());
+        self::assertEmpty($template->getStates());
         self::assertEmpty($template->getRolePermissions());
         self::assertEmpty($template->getGroupPermissions());
     }
@@ -143,6 +144,22 @@ final class TemplateTest extends TestCase
 
         $template->setLocked(true);
         self::assertTrue($template->isLocked());
+    }
+
+    /**
+     * @covers ::getStates
+     */
+    public function testStates(): void
+    {
+        $template = new Template(new Project());
+        self::assertEmpty($template->getStates());
+
+        /** @var \Doctrine\Common\Collections\Collection $states */
+        $states = $this->getProperty($template, 'states');
+        $states->add('State A');
+        $states->add('State B');
+
+        self::assertSame(['State A', 'State B'], $template->getStates()->getValues());
     }
 
     /**

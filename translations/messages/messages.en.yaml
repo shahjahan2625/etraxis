@@ -4,6 +4,12 @@ role.responsible: Responsible
 security.login: 'Log in'
 security.logout: 'Log out'
 security.remember_me: 'Remember me'
+state.responsible.assign: Assign
+state.responsible.keep: 'Keep current'
+state.responsible.remove: 'Remove current'
+state.type.final: Final
+state.type.initial: Initial
+state.type.intermediate: Intermediate
 template.permission.add_comments: 'Add comments'
 template.permission.add_dependencies: 'Add dependencies'
 template.permission.attach_files: 'Attach files'
