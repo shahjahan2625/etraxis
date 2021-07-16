@@ -32,6 +32,7 @@ final class UserTest extends TestCase
         $user = new User();
 
         self::assertFalse($user->isAdmin());
+        self::assertEmpty($user->getGroups());
     }
 
     /**
@@ -164,5 +165,28 @@ final class UserTest extends TestCase
 
         $user->setTimezone('Unknown');
         self::assertSame('Pacific/Auckland', $user->getTimezone());
+    }
+
+    /**
+     * @covers ::getGroups
+     */
+    public function testGroups(): void
+    {
+        $user = new User();
+        self::assertEmpty($user->getGroups());
+
+        $group1 = new Group();
+        $group2 = new Group();
+
+        $this->setProperty($group1, 'id', 1);
+        $this->setProperty($group2, 'id', 2);
+
+        /** @var \Doctrine\Common\Collections\Collection $groups */
+        $groups = $this->getProperty($user, 'groups');
+
+        $groups->add($group1);
+        $groups->add($group2);
+
+        self::assertSame([$group1, $group2], $user->getGroups()->getValues());
     }
 }

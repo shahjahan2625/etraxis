@@ -16,6 +16,8 @@ namespace App\Entity;
 use App\Dictionary\Locale;
 use App\Dictionary\Timezone;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -81,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @ORM\Column(name="admin", type="boolean")
      */
-    protected bool $admin;
+    protected bool $isAdmin;
 
     /**
      * User's settings.
@@ -91,11 +93,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected ?array $settings = null;
 
     /**
+     * List of groups the user is member of.
+     *
+     * @ORM\ManyToMany(targetEntity=Group::class, mappedBy="members")
+     * @ORM\OrderBy({"name": "ASC"})
+     */
+    protected Collection $groups;
+
+    /**
      * Creates new user.
      */
     public function __construct()
     {
-        $this->admin = false;
+        $this->isAdmin = false;
+
+        $this->groups = new ArrayCollection();
     }
 
     /**
@@ -121,7 +133,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        return [$this->admin ? self::ROLE_ADMIN : self::ROLE_USER];
+        return [$this->isAdmin ? self::ROLE_ADMIN : self::ROLE_USER];
     }
 
     /**
@@ -144,7 +156,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Property getter.
      */
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -226,15 +238,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isAdmin(): bool
     {
-        return $this->admin;
+        return $this->isAdmin;
     }
 
     /**
      * Property setter.
      */
-    public function setAdmin(bool $admin): self
+    public function setAdmin(bool $isAdmin): self
     {
-        $this->admin = $admin;
+        $this->isAdmin = $isAdmin;
 
         return $this;
     }
@@ -277,5 +289,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Property getter.
+     *
+     * @return Collection|Group[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
     }
 }
