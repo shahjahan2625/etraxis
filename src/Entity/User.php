@@ -96,7 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * List of groups the user is member of.
      *
      * @ORM\ManyToMany(targetEntity=Group::class, mappedBy="members")
-     * @ORM\OrderBy({"name": "ASC"})
+     * @ORM\OrderBy({"name": "ASC", "project": "ASC"})
      */
     protected Collection $groups;
 

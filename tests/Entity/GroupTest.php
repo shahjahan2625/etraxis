@@ -29,9 +29,18 @@ final class GroupTest extends TestCase
      */
     public function testConstructor(): void
     {
-        $group = new Group();
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
 
-        self::assertEmpty($group->getMembers());
+        $group1 = new Group($project);
+
+        self::assertSame($project, $group1->getProject());
+        self::assertEmpty($group1->getMembers());
+
+        $group2 = new Group();
+
+        self::assertNull($group2->getProject());
+        self::assertEmpty($group2->getMembers());
     }
 
     /**
@@ -43,6 +52,21 @@ final class GroupTest extends TestCase
 
         $this->setProperty($group, 'id', 1);
         self::assertSame(1, $group->getId());
+    }
+
+    /**
+     * @covers ::getProject
+     */
+    public function testProject(): void
+    {
+        $project = new Project();
+        $this->setProperty($project, 'id', 1);
+
+        $group1 = new Group($project);
+        self::assertSame($project, $group1->getProject());
+
+        $group2 = new Group();
+        self::assertNull($group2->getProject());
     }
 
     /**
@@ -94,5 +118,17 @@ final class GroupTest extends TestCase
         $group->removeMember($user1);
 
         self::assertSame([$user2], $group->getMembers()->getValues());
+    }
+
+    /**
+     * @covers ::isGlobal
+     */
+    public function testIsGlobal(): void
+    {
+        $group = new Group(new Project());
+        self::assertFalse($group->isGlobal());
+
+        $group = new Group();
+        self::assertTrue($group->isGlobal());
     }
 }

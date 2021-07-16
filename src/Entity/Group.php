@@ -23,8 +23,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
  * Group.
  *
  * @ORM\Entity(repositoryClass=GroupRepository::class)
- * @ORM\Table(name="groups")
- * @Assert\UniqueEntity(fields={"name"}, message="group.conflict.name")
+ * @ORM\Table(
+ *     name="groups",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(columns={"project_id", "name"})
+ *     }
+ * )
+ * @Assert\UniqueEntity(fields={"project", "name"}, message="group.conflict.name", ignoreNull=false)
  */
 class Group
 {
@@ -42,9 +47,17 @@ class Group
     protected int $id;
 
     /**
+     * Project of the group.
+     *
+     * @ORM\ManyToOne(targetEntity=Project::class, inversedBy="groups")
+     * @ORM\JoinColumn(name="project_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected ?Project $project = null;
+
+    /**
      * Name of the group.
      *
-     * @ORM\Column(name="name", type="string", length=25, unique=true)
+     * @ORM\Column(name="name", type="string", length=25)
      */
     protected string $name;
 
@@ -62,17 +75,19 @@ class Group
      * @ORM\JoinTable(
      *     name="membership",
      *     joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id", onDelete="CASCADE")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     *     inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}
      * )
      * @ORM\OrderBy({"fullname": "ASC", "email": "ASC"})
      */
     protected Collection $members;
 
     /**
-     * Creates new group.
+     * Creates new group in the specified project (NULL creates a global group).
      */
-    public function __construct()
+    public function __construct(?Project $project = null)
     {
+        $this->project = $project;
+
         $this->members = new ArrayCollection();
     }
 
@@ -82,6 +97,14 @@ class Group
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function getProject(): ?Project
+    {
+        return $this->project;
     }
 
     /**
@@ -150,5 +173,13 @@ class Group
         $this->members->removeElement($user);
 
         return $this;
+    }
+
+    /**
+     * Whether the group is global.
+     */
+    public function isGlobal(): bool
+    {
+        return $this->project === null;
     }
 }
