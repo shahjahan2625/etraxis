@@ -30,7 +30,6 @@ final class GroupTest extends TestCase
     public function testConstructor(): void
     {
         $project = new Project();
-        $this->setProperty($project, 'id', 1);
 
         $group1 = new Group($project);
 
@@ -60,7 +59,6 @@ final class GroupTest extends TestCase
     public function testProject(): void
     {
         $project = new Project();
-        $this->setProperty($project, 'id', 1);
 
         $group1 = new Group($project);
         self::assertSame($project, $group1->getProject());

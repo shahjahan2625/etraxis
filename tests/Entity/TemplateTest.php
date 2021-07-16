@@ -29,9 +29,7 @@ final class TemplateTest extends TestCase
      */
     public function testConstructor(): void
     {
-        $project = new Project();
-        $this->setProperty($project, 'id', 1);
-
+        $project  = new Project();
         $template = new Template($project);
 
         self::assertSame($project, $template->getProject());
@@ -57,7 +55,6 @@ final class TemplateTest extends TestCase
     public function testProject(): void
     {
         $project = new Project();
-        $this->setProperty($project, 'id', 1);
 
         $template = new Template($project);
         self::assertSame($project, $template->getProject());

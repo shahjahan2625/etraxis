@@ -15,7 +15,6 @@ namespace App\Entity;
 
 use App\Dictionary\SystemRole;
 use App\Dictionary\TemplatePermission;
-use App\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -24,20 +23,16 @@ use PHPUnit\Framework\TestCase;
  */
 final class TemplateRolePermissionTest extends TestCase
 {
-    use ReflectionTrait;
-
     /**
      * @covers ::__construct
      */
     public function testConstructor(): void
     {
-        $project = new Project();
-        $this->setProperty($project, 'id', 1);
-
+        $project  = new Project();
         $template = new Template($project);
-        $this->setProperty($template, 'id', 2);
 
         $permission = new TemplateRolePermission($template, SystemRole::AUTHOR, TemplatePermission::EDIT_ISSUES);
+
         self::assertSame($template, $permission->getTemplate());
         self::assertSame(SystemRole::AUTHOR, $permission->getRole());
         self::assertSame(TemplatePermission::EDIT_ISSUES, $permission->getPermission());
@@ -51,11 +46,8 @@ final class TemplateRolePermissionTest extends TestCase
         $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionMessage('Unknown system role: foo');
 
-        $project = new Project();
-        $this->setProperty($project, 'id', 1);
-
+        $project  = new Project();
         $template = new Template($project);
-        $this->setProperty($template, 'id', 2);
 
         new TemplateRolePermission($template, 'foo', TemplatePermission::EDIT_ISSUES);
     }
@@ -68,11 +60,8 @@ final class TemplateRolePermissionTest extends TestCase
         $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionMessage('Unknown permission: bar');
 
-        $project = new Project();
-        $this->setProperty($project, 'id', 1);
-
+        $project  = new Project();
         $template = new Template($project);
-        $this->setProperty($template, 'id', 2);
 
         new TemplateRolePermission($template, SystemRole::AUTHOR, 'bar');
     }
