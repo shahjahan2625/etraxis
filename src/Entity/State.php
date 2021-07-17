@@ -85,6 +85,14 @@ class State
     protected ?State $nextState = null;
 
     /**
+     * List of state fields.
+     *
+     * @ORM\OneToMany(targetEntity=Field::class, mappedBy="state", orphanRemoval=true)
+     * @ORM\OrderBy({"position": "ASC"})
+     */
+    protected Collection $fields;
+
+    /**
      * List of state role transitions.
      *
      * @ORM\OneToMany(targetEntity=StateRoleTransition::class, mappedBy="fromState", orphanRemoval=true)
@@ -118,6 +126,7 @@ class State
         $this->type        = $type;
         $this->responsible = StateResponsible::REMOVE;
 
+        $this->fields            = new ArrayCollection();
         $this->roleTransitions   = new ArrayCollection();
         $this->groupTransitions  = new ArrayCollection();
         $this->responsibleGroups = new ArrayCollection();
@@ -213,6 +222,16 @@ class State
         }
 
         return $this;
+    }
+
+    /**
+     * Property getter.
+     *
+     * @return Collection|Field[]
+     */
+    public function getFields(): Collection
+    {
+        return $this->fields->filter(fn (Field $field) => !$field->isRemoved());
     }
 
     /**

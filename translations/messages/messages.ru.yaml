@@ -1,3 +1,14 @@
+field.permission.read_only: 'только чтение'
+field.permission.read_write: 'чтение и запись'
+field.type.checkbox: Переключатель
+field.type.date: Дата
+field.type.decimal: 'Вещественное число'
+field.type.duration: Длительность
+field.type.issue: Запись
+field.type.list: Список
+field.type.number: 'Целое число'
+field.type.string: Строка
+field.type.text: 'Многострочный текст'
 role.any: 'Любой пользователь'
 role.author: Автор
 role.responsible: Ответственный

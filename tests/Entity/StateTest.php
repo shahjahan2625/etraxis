@@ -13,6 +13,7 @@
 
 namespace App\Entity;
 
+use App\Dictionary\FieldType;
 use App\Dictionary\StateResponsible;
 use App\Dictionary\StateType;
 use App\ReflectionTrait;
@@ -38,6 +39,7 @@ final class StateTest extends TestCase
         self::assertSame($template, $state->getTemplate());
         self::assertSame(StateType::INITIAL, $state->getType());
         self::assertSame(StateResponsible::REMOVE, $state->getResponsible());
+        self::assertEmpty($state->getFields());
         self::assertEmpty($state->getRoleTransitions());
         self::assertEmpty($state->getGroupTransitions());
         self::assertEmpty($state->getResponsibleGroups());
@@ -203,6 +205,32 @@ final class StateTest extends TestCase
         $state = new State($template2, StateType::INTERMEDIATE);
 
         $state->setNextState($nextState);
+    }
+
+    /**
+     * @covers ::getFields
+     */
+    public function testFields(): void
+    {
+        $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
+        self::assertEmpty($state->getFields());
+
+        $field1 = new Field($state, FieldType::STRING);
+        $field2 = new Field($state, FieldType::STRING);
+        $field3 = new Field($state, FieldType::STRING);
+
+        /** @var \Doctrine\Common\Collections\Collection $fields */
+        $fields = $this->getProperty($state, 'fields');
+
+        $fields->add($field1);
+        $fields->add($field2);
+        $fields->add($field3);
+
+        self::assertSame([$field1, $field2, $field3], $state->getFields()->getValues());
+
+        $field3->remove();
+
+        self::assertSame([$field1, $field2], $state->getFields()->getValues());
     }
 
     /**

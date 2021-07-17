@@ -1,3 +1,14 @@
+field.permission.read_only: 'Read only'
+field.permission.read_write: 'Read and write'
+field.type.checkbox: Checkbox
+field.type.date: Date
+field.type.decimal: Decimal
+field.type.duration: Duration
+field.type.issue: Issue
+field.type.list: List
+field.type.number: Number
+field.type.string: String
+field.type.text: Text
 role.any: 'Any user'
 role.author: Author
 role.responsible: Responsible
