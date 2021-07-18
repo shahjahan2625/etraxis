@@ -39,6 +39,25 @@ class Field
     public const MAX_NAME        = 50;
     public const MAX_DESCRIPTION = 1000;
 
+    // Field parameters.
+    public const DEFAULT = 'default';
+    public const LENGTH  = 'length';
+    public const MINIMUM = 'minimum';
+    public const MAXIMUM = 'maximum';
+
+    // Supported field parameters by type.
+    protected array $supportedParameters = [
+        FieldType::CHECKBOX => [self::DEFAULT],
+        FieldType::DATE     => [self::DEFAULT, self::MINIMUM, self::MAXIMUM],
+        FieldType::DECIMAL  => [self::DEFAULT, self::MINIMUM, self::MAXIMUM],
+        FieldType::DURATION => [self::DEFAULT, self::MINIMUM, self::MAXIMUM],
+        FieldType::ISSUE    => [],
+        FieldType::LIST     => [self::DEFAULT],
+        FieldType::NUMBER   => [self::DEFAULT, self::MINIMUM, self::MAXIMUM],
+        FieldType::STRING   => [self::DEFAULT, self::LENGTH],
+        FieldType::TEXT     => [self::DEFAULT, self::LENGTH],
+    ];
+
     /**
      * Unique ID.
      *
@@ -98,6 +117,13 @@ class Field
      * @ORM\Column(name="removed_at", type="integer", nullable=true)
      */
     protected ?int $removedAt = null;
+
+    /**
+     * Field parameters.
+     *
+     * @ORM\Column(name="parameters", type="json", nullable=true)
+     */
+    protected ?array $parameters = null;
 
     /**
      * List of field role permissions.
@@ -240,6 +266,37 @@ class Field
     {
         if ($this->removedAt === null) {
             $this->removedAt = time();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function getParameter(string $parameter): ?int
+    {
+        if (!in_array($parameter, $this->supportedParameters[$this->type], true)) {
+            throw new \UnexpectedValueException(sprintf('Unsupported parameter for %s field: %s', $this->type, $parameter));
+        }
+
+        return $this->parameters[$parameter] ?? null;
+    }
+
+    /**
+     * Property setter.
+     */
+    public function setParameter(string $parameter, ?int $value): self
+    {
+        if (!in_array($parameter, $this->supportedParameters[$this->type], true)) {
+            throw new \UnexpectedValueException(sprintf('Unsupported parameter for %s field: %s', $this->type, $parameter));
+        }
+
+        if ($value === null) {
+            unset($this->parameters[$parameter]);
+        }
+        else {
+            $this->parameters[$parameter] = $value;
         }
 
         return $this;

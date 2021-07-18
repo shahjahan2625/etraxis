@@ -16,6 +16,7 @@ namespace App\Entity;
 use App\Dictionary\FieldType;
 use App\Dictionary\StateType;
 use App\ReflectionTrait;
+use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -150,6 +151,64 @@ final class FieldTest extends TestCase
 
         $field->remove();
         self::assertTrue($field->isRemoved());
+    }
+
+    /**
+     * @covers ::getParameter
+     * @covers ::setParameter
+     */
+    public function testParameters(): void
+    {
+        $expected = [
+            FieldType::CHECKBOX => [Field::DEFAULT => true,  Field::LENGTH => false, Field::MINIMUM => false, Field::MAXIMUM => false],
+            FieldType::DATE     => [Field::DEFAULT => true,  Field::LENGTH => false, Field::MINIMUM => true,  Field::MAXIMUM => true],
+            FieldType::DECIMAL  => [Field::DEFAULT => true,  Field::LENGTH => false, Field::MINIMUM => true,  Field::MAXIMUM => true],
+            FieldType::DURATION => [Field::DEFAULT => true,  Field::LENGTH => false, Field::MINIMUM => true,  Field::MAXIMUM => true],
+            FieldType::ISSUE    => [Field::DEFAULT => false, Field::LENGTH => false, Field::MINIMUM => false, Field::MAXIMUM => false],
+            FieldType::LIST     => [Field::DEFAULT => true,  Field::LENGTH => false, Field::MINIMUM => false, Field::MAXIMUM => false],
+            FieldType::NUMBER   => [Field::DEFAULT => true,  Field::LENGTH => false, Field::MINIMUM => true,  Field::MAXIMUM => true],
+            FieldType::STRING   => [Field::DEFAULT => true,  Field::LENGTH => true,  Field::MINIMUM => false, Field::MAXIMUM => false],
+            FieldType::TEXT     => [Field::DEFAULT => true,  Field::LENGTH => true,  Field::MINIMUM => false, Field::MAXIMUM => false],
+        ];
+
+        foreach ($expected as $type => $parameters) {
+
+            $field = new Field(new State(new Template(new Project()), StateType::INTERMEDIATE), $type);
+
+            foreach ($parameters as $parameter => $supported) {
+
+                if ($supported) {
+                    self::assertNull($field->getParameter($parameter));
+
+                    $field->setParameter($parameter, 1);
+                    self::assertSame(1, $field->getParameter($parameter));
+
+                    $field->setParameter($parameter, null);
+                    self::assertNull($field->getParameter($parameter));
+                }
+                else {
+                    try {
+                        $field->getParameter($parameter);
+
+                        throw new Exception(sprintf('Parameter should not be readable for %s: %s', $type, $parameter));
+                    }
+                    catch (\Exception $exception) {
+                        self::assertInstanceOf(\UnexpectedValueException::class, $exception);
+                        self::assertSame(sprintf('Unsupported parameter for %s field: %s', $type, $parameter), $exception->getMessage());
+                    }
+
+                    try {
+                        $field->setParameter($parameter, 1);
+
+                        throw new Exception(sprintf('Parameter should not be writeable for %s: %s', $type, $parameter));
+                    }
+                    catch (\Exception $exception) {
+                        self::assertInstanceOf(\UnexpectedValueException::class, $exception);
+                        self::assertSame(sprintf('Unsupported parameter for %s field: %s', $type, $parameter), $exception->getMessage());
+                    }
+                }
+            }
+        }
     }
 
     /**
