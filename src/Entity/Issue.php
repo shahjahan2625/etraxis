@@ -267,7 +267,7 @@ class Issue
      */
     public function getAge(): int
     {
-        return ceil((($this->closedAt ?? time()) - $this->createdAt) / self::ONE_DAY);
+        return (int) ceil((($this->closedAt ?? time()) - $this->createdAt) / self::ONE_DAY);
     }
 
     /**
@@ -307,7 +307,7 @@ class Issue
      */
     public function isCritical(): bool
     {
-        return $this->closedAt === null
+        return !$this->isClosed()
             && $this->state->getTemplate()->getCriticalAge() !== null
             && $this->state->getTemplate()->getCriticalAge() < $this->getAge();
     }
@@ -317,7 +317,7 @@ class Issue
      */
     public function isFrozen(): bool
     {
-        return $this->closedAt
+        return $this->isClosed()
             && $this->state->getTemplate()->getFrozenTime() !== null
             && $this->state->getTemplate()->getFrozenTime() < ceil((time() - $this->closedAt) / self::ONE_DAY);
     }
