@@ -23,6 +23,12 @@ use Doctrine\ORM\Mapping as ORM;
  * Issue.
  *
  * @ORM\Entity(repositoryClass=IssueRepository::class)
+ * @ORM\Table(
+ *     name="issues",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(columns={"author_id", "created_at"})
+ *     }
+ * )
  */
 class Issue
 {
