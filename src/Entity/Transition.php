@@ -13,6 +13,7 @@
 
 namespace App\Entity;
 
+use App\Dictionary\EventType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -63,6 +64,17 @@ class Transition
      */
     public function __construct(Event $event, State $state)
     {
+        $supported = [
+            EventType::ISSUE_CLOSED,
+            EventType::ISSUE_CREATED,
+            EventType::ISSUE_REOPENED,
+            EventType::STATE_CHANGED,
+        ];
+
+        if (!in_array($event->getType(), $supported, true)) {
+            throw new \UnexpectedValueException('Invalid event: ' . $event->getType());
+        }
+
         if ($event->getIssue()->getTemplate() !== $state->getTemplate()) {
             throw new \UnexpectedValueException('Unknown state: ' . $state->getName());
         }

@@ -13,6 +13,7 @@
 
 namespace App\Entity;
 
+use App\Dictionary\EventType;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -72,6 +73,10 @@ class Change
      */
     public function __construct(Event $event, ?Field $field, ?int $oldValue, ?int $newValue)
     {
+        if ($event->getType() !== EventType::ISSUE_EDITED) {
+            throw new \UnexpectedValueException('Invalid event: ' . $event->getType());
+        }
+
         if ($field !== null && $event->getIssue()->getTemplate() !== $field->getState()->getTemplate()) {
             throw new \UnexpectedValueException('Unknown field: ' . $field->getName());
         }

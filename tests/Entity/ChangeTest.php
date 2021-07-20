@@ -56,7 +56,24 @@ final class ChangeTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorException(): void
+    public function testConstructorExceptionEvent(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid event: issue.created');
+
+        $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
+        $field = new Field($state, FieldType::NUMBER);
+        $user  = new User();
+        $issue = new Issue($state, $user);
+        $event = new Event(EventType::ISSUE_CREATED, $issue, $user);
+
+        new Change($event, $field, 1, null);
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function testConstructorExceptionField(): void
     {
         $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionMessage('Unknown field: foo');

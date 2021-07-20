@@ -34,7 +34,7 @@ final class TransitionTest extends TestCase
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
         $user  = new User();
         $issue = new Issue($state, $user);
-        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event = new Event(EventType::STATE_CHANGED, $issue, $user);
 
         $transition = new Transition($event, $state);
 
@@ -46,7 +46,23 @@ final class TransitionTest extends TestCase
     /**
      * @covers ::__construct
      */
-    public function testConstructorException(): void
+    public function testConstructorExceptionEvent(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Invalid event: issue.edited');
+
+        $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
+        $user  = new User();
+        $issue = new Issue($state, $user);
+        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
+
+        new Transition($event, $state);
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function testConstructorExceptionState(): void
     {
         $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionMessage('Unknown state: foo');
@@ -56,7 +72,7 @@ final class TransitionTest extends TestCase
         $state    = new State($template, StateType::INTERMEDIATE);
         $user     = new User();
         $issue    = new Issue($state, $user);
-        $event    = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event    = new Event(EventType::STATE_CHANGED, $issue, $user);
 
         $template2 = new Template($project);
         $state2    = new State($template2, StateType::FINAL);
@@ -74,7 +90,7 @@ final class TransitionTest extends TestCase
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
         $user  = new User();
         $issue = new Issue($state, $user);
-        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event = new Event(EventType::STATE_CHANGED, $issue, $user);
 
         $transition = new Transition($event, $state);
 
@@ -90,7 +106,7 @@ final class TransitionTest extends TestCase
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
         $user  = new User();
         $issue = new Issue($state, $user);
-        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event = new Event(EventType::STATE_CHANGED, $issue, $user);
 
         $transition = new Transition($event, $state);
         self::assertSame($event, $transition->getEvent());
@@ -104,7 +120,7 @@ final class TransitionTest extends TestCase
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
         $user  = new User();
         $issue = new Issue($state, $user);
-        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event = new Event(EventType::STATE_CHANGED, $issue, $user);
 
         $transition = new Transition($event, $state);
         self::assertSame($state, $transition->getState());
@@ -118,7 +134,7 @@ final class TransitionTest extends TestCase
         $state = new State(new Template(new Project()), StateType::INTERMEDIATE);
         $user  = new User();
         $issue = new Issue($state, $user);
-        $event = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event = new Event(EventType::STATE_CHANGED, $issue, $user);
 
         $transition = new Transition($event, $state);
         self::assertEmpty($transition->getValues());

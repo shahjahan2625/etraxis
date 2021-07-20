@@ -36,7 +36,7 @@ final class FieldValueTest extends TestCase
         $field      = new Field($state, FieldType::NUMBER);
         $user       = new User();
         $issue      = new Issue($state, $user);
-        $event      = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event      = new Event(EventType::STATE_CHANGED, $issue, $user);
         $transition = new Transition($event, $state);
 
         $fieldValue = new FieldValue($transition, $field, null);
@@ -64,7 +64,7 @@ final class FieldValueTest extends TestCase
         $state      = new State($template, StateType::INTERMEDIATE);
         $user       = new User();
         $issue      = new Issue($state, $user);
-        $event      = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event      = new Event(EventType::STATE_CHANGED, $issue, $user);
         $transition = new Transition($event, $state);
 
         $state2    = new State($template, StateType::FINAL);
@@ -84,7 +84,7 @@ final class FieldValueTest extends TestCase
         $field      = new Field($state, FieldType::NUMBER);
         $user       = new User();
         $issue      = new Issue($state, $user);
-        $event      = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event      = new Event(EventType::STATE_CHANGED, $issue, $user);
         $transition = new Transition($event, $state);
 
         $fieldValue = new FieldValue($transition, $field, null);
@@ -102,7 +102,7 @@ final class FieldValueTest extends TestCase
         $field      = new Field($state, FieldType::NUMBER);
         $user       = new User();
         $issue      = new Issue($state, $user);
-        $event      = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event      = new Event(EventType::STATE_CHANGED, $issue, $user);
         $transition = new Transition($event, $state);
 
         $fieldValue = new FieldValue($transition, $field, null);
@@ -118,7 +118,7 @@ final class FieldValueTest extends TestCase
         $field      = new Field($state, FieldType::NUMBER);
         $user       = new User();
         $issue      = new Issue($state, $user);
-        $event      = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event      = new Event(EventType::STATE_CHANGED, $issue, $user);
         $transition = new Transition($event, $state);
 
         $fieldValue = new FieldValue($transition, $field, null);
@@ -134,7 +134,7 @@ final class FieldValueTest extends TestCase
         $field      = new Field($state, FieldType::NUMBER);
         $user       = new User();
         $issue      = new Issue($state, $user);
-        $event      = new Event(EventType::ISSUE_EDITED, $issue, $user);
+        $event      = new Event(EventType::STATE_CHANGED, $issue, $user);
         $transition = new Transition($event, $state);
 
         $fieldValue = new FieldValue($transition, $field, null);
