@@ -38,7 +38,7 @@ class Transition
      * Event of the transition.
      *
      * @ORM\OneToOne(targetEntity=Event::class)
-     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", unique=true, nullable=false)
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id", unique=true, nullable=false, onDelete="CASCADE")
      */
     protected Event $event;
 

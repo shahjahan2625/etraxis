@@ -41,7 +41,7 @@ class FieldValue
      * Transition.
      *
      * @ORM\ManyToOne(targetEntity=Transition::class, inversedBy="fieldValues")
-     * @ORM\JoinColumn(name="transition_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="transition_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected Transition $transition;
 
