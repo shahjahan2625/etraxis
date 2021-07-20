@@ -123,6 +123,14 @@ class Issue
     protected Collection $events;
 
     /**
+     * List of issue watchers.
+     *
+     * @ORM\OneToMany(targetEntity=Watcher::class, mappedBy="issue", orphanRemoval=true)
+     * @ORM\OrderBy({"fullname": "ASC", "email": "ASC"})
+     */
+    protected Collection $watchers;
+
+    /**
      * Creates new issue.
      */
     public function __construct(State $state, User $author, ?self $origin = null)
@@ -141,7 +149,8 @@ class Issue
             $this->closedAt = $this->createdAt;
         }
 
-        $this->events = new ArrayCollection();
+        $this->events   = new ArrayCollection();
+        $this->watchers = new ArrayCollection();
     }
 
     /**
@@ -370,5 +379,15 @@ class Issue
     public function getEvents(): Collection
     {
         return $this->events;
+    }
+
+    /**
+     * Property getter.
+     *
+     * @return Collection|Watcher[]
+     */
+    public function getWatchers(): Collection
+    {
+        return $this->watchers;
     }
 }

@@ -1,0 +1,69 @@
+<?php
+
+//----------------------------------------------------------------------
+//
+//  Copyright (C) 2018 Artem Rodygin
+//
+//  This file is part of eTraxis.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with eTraxis. If not, see <https://www.gnu.org/licenses/>.
+//
+//----------------------------------------------------------------------
+
+namespace App\Entity;
+
+use App\Repository\WatcherRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Issue watcher.
+ *
+ * @ORM\Entity(repositoryClass=WatcherRepository::class)
+ * @ORM\Table(name="watchers")
+ */
+class Watcher
+{
+    /**
+     * Watched issue.
+     *
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity=Issue::class, inversedBy="watchers")
+     * @ORM\JoinColumn(name="issue_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
+    protected Issue $issue;
+
+    /**
+     * Watching user.
+     *
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
+     */
+    protected User $user;
+
+    /**
+     * Creates new watcher.
+     */
+    public function __construct(Issue $issue, User $user)
+    {
+        $this->issue = $issue;
+        $this->user  = $user;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function getIssue(): Issue
+    {
+        return $this->issue;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+}

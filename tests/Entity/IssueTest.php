@@ -42,6 +42,7 @@ final class IssueTest extends TestCase
         self::assertSame($issue->getCreatedAt(), $issue->getChangedAt());
         self::assertNull($issue->getClosedAt());
         self::assertEmpty($issue->getEvents());
+        self::assertEmpty($issue->getWatchers());
 
         $state2 = new State($template, StateType::FINAL);
         $cloned = new Issue($state2, $user, $issue);
@@ -386,5 +387,22 @@ final class IssueTest extends TestCase
         $events->add('Event B');
 
         self::assertSame(['Event A', 'Event B'], $issue->getEvents()->getValues());
+    }
+
+    /**
+     * @covers ::getWatchers
+     */
+    public function testWatchers(): void
+    {
+        $state = new State(new Template(new Project()), StateType::INITIAL);
+        $issue = new Issue($state, new User());
+        self::assertEmpty($issue->getWatchers());
+
+        /** @var \Doctrine\Common\Collections\Collection $watchers */
+        $watchers = $this->getProperty($issue, 'watchers');
+        $watchers->add('Watcher A');
+        $watchers->add('Watcher B');
+
+        self::assertSame(['Watcher A', 'Watcher B'], $issue->getWatchers()->getValues());
     }
 }
