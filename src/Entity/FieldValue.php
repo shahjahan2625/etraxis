@@ -28,6 +28,18 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FieldValue
 {
+    // Date constraints.
+    public const MIN_DATE_VALUE = -0x80000000;
+    public const MAX_DATE_VALUE = 0x7FFFFFFF;
+
+    // Duration constraints.
+    public const MIN_DURATION_VALUE = 0;            // 0:00
+    public const MAX_DURATION_VALUE = 59999999;     // 999999:59
+
+    // Number constraints.
+    public const MIN_NUMBER_VALUE = -1000000000;
+    public const MAX_NUMBER_VALUE = 1000000000;
+
     /**
      * Unique ID.
      *

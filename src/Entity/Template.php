@@ -13,6 +13,7 @@
 
 namespace App\Entity;
 
+use App\Dictionary\StateType;
 use App\Repository\TemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -259,6 +260,14 @@ class Template
         $this->isLocked = $isLocked;
 
         return $this;
+    }
+
+    /**
+     * Returns initial state of the template if present.
+     */
+    public function getInitialState(): ?State
+    {
+        return $this->states->filter(fn (State $state) => $state->getType() === StateType::INITIAL)->first() ?: null;
     }
 
     /**

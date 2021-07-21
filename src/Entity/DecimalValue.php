@@ -25,6 +25,8 @@ use Doctrine\ORM\Mapping as ORM;
 class DecimalValue
 {
     // Constraints.
+    public const MIN_VALUE = '-9999999999.9999999999';
+    public const MAX_VALUE = '9999999999.9999999999';
     public const PRECISION = 10;
 
     /**

@@ -13,6 +13,7 @@
 
 namespace App\Entity;
 
+use App\Dictionary\StateType;
 use App\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -144,6 +145,29 @@ final class TemplateTest extends TestCase
 
         $template->setLocked(true);
         self::assertTrue($template->isLocked());
+    }
+
+    /**
+     * @covers ::getInitialState
+     */
+    public function testInitialState(): void
+    {
+        $template = new Template(new Project());
+        self::assertNull($template->getInitialState());
+
+        $initial      = new State($template, StateType::INITIAL);
+        $intermediate = new State($template, StateType::INTERMEDIATE);
+        $final        = new State($template, StateType::FINAL);
+
+        /** @var \Doctrine\Common\Collections\Collection $states */
+        $states = $this->getProperty($template, 'states');
+
+        $states->add($intermediate);
+        $states->add($final);
+        self::assertNull($template->getInitialState());
+
+        $states->add($initial);
+        self::assertSame($initial, $template->getInitialState());
     }
 
     /**
