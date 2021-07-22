@@ -22,7 +22,20 @@ services:
             - '../src/Dictionary/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+            - '../src/Message/'
             - '../src/Tests/'
+
+    App\MessageHandler\:
+        resource: '../src/MessageHandler/'
+        autoconfigure: false
+
+    _instanceof:
+        App\MessageBus\Contracts\CommandHandlerInterface:
+            tags: [{ name: messenger.message_handler, bus: command.bus }]
+        App\MessageBus\Contracts\QueryHandlerInterface:
+            tags: [{ name: messenger.message_handler, bus: query.bus }]
+        App\MessageBus\Contracts\EventHandlerInterface:
+            tags: [{ name: messenger.message_handler, bus: event.bus }]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
