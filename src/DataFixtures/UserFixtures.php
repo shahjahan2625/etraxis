@@ -13,6 +13,7 @@
 
 namespace App\DataFixtures;
 
+use App\Dictionary\AccountProvider;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -54,6 +55,12 @@ class UserFixtures extends Fixture implements FixtureInterface, DependentFixture
 
             'artem@example.com' => [
                 'fullname' => 'Artem Rodygin',
+            ],
+
+            'einstein@ldap.forumsys.com' => [
+                'provider' => AccountProvider::LDAP,
+                'uid'      => 'uid=einstein,dc=example,dc=com',
+                'fullname' => 'Albert Einstein',
             ],
 
             'lucas.oconnell@example.com' => [
@@ -219,6 +226,15 @@ class UserFixtures extends Fixture implements FixtureInterface, DependentFixture
                 ->setFullname($row['fullname'])
                 ->setDescription($row['description'] ?? null)
             ;
+
+            if ($row['provider'] ?? false) {
+
+                $user
+                    ->setPassword(null)
+                    ->setAccountProvider($row['provider'])
+                    ->setAccountUid($row['uid'])
+                ;
+            }
 
             $this->addReference('user:' . $email, $user);
 

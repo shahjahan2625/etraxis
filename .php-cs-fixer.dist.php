@@ -29,6 +29,7 @@ return (new PhpCsFixer\Config())
         'braces'                     => false,
         'concat_space'               => ['spacing' => 'one'],
         'declare_strict_types'       => false,
+        'function_typehint_space'    => false,
         'native_function_invocation' => false,
         'no_extra_blank_lines'       => true,
         'self_static_accessor'       => true,

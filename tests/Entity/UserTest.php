@@ -13,6 +13,7 @@
 
 namespace App\Entity;
 
+use App\Dictionary\AccountProvider;
 use App\ReflectionTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -29,9 +30,13 @@ final class UserTest extends TestCase
      */
     public function testConstructor(): void
     {
+        $uuid_pattern = '/^([[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12})$/is';
+
         $user = new User();
 
         self::assertFalse($user->isAdmin());
+        self::assertSame(AccountProvider::ETRAXIS, $user->getAccountProvider());
+        self::assertMatchesRegularExpression($uuid_pattern, $user->getAccountUid());
         self::assertEmpty($user->getGroups());
     }
 
@@ -136,6 +141,46 @@ final class UserTest extends TestCase
     }
 
     /**
+     * @covers ::getAccountProvider
+     * @covers ::setAccountProvider
+     */
+    public function testAccountProvider(): void
+    {
+        $user = new User();
+        self::assertSame(AccountProvider::ETRAXIS, $user->getAccountProvider());
+
+        $user->setAccountProvider(AccountProvider::LDAP);
+        self::assertSame(AccountProvider::LDAP, $user->getAccountProvider());
+    }
+
+    /**
+     * @covers ::setAccountProvider
+     */
+    public function testAccountProviderException(): void
+    {
+        $this->expectException(\UnexpectedValueException::class);
+        $this->expectExceptionMessage('Unknown account provider: noname');
+
+        $user = new User();
+        $user->setAccountProvider('noname');
+    }
+
+    /**
+     * @covers ::getAccountUid
+     * @covers ::setAccountUid
+     */
+    public function testAccountUid(): void
+    {
+        $expected = '80fe8ef1-00ba-4d37-9028-6d92db603c91';
+
+        $user = new User();
+        self::assertNotSame($expected, $user->getAccountUid());
+
+        $user->setAccountUid($expected);
+        self::assertSame($expected, $user->getAccountUid());
+    }
+
+    /**
      * @covers ::getLocale
      * @covers ::setLocale
      */
@@ -181,5 +226,20 @@ final class UserTest extends TestCase
         $groups->add('Group B');
 
         self::assertSame(['Group A', 'Group B'], $user->getGroups()->getValues());
+    }
+
+    /**
+     * @covers ::isAccountExternal
+     */
+    public function testIsAccountExternal(): void
+    {
+        $user = new User();
+        self::assertFalse($user->isAccountExternal());
+
+        $user->setAccountProvider(AccountProvider::LDAP);
+        self::assertTrue($user->isAccountExternal());
+
+        $user->setAccountProvider(AccountProvider::ETRAXIS);
+        self::assertFalse($user->isAccountExternal());
     }
 }

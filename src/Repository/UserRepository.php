@@ -53,4 +53,25 @@ class UserRepository extends ServiceEntityRepository implements Contracts\UserRe
     {
         $this->getEntityManager()->refresh($entity);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findOneByEmail(string $email): ?User
+    {
+        return $this->findOneBy([
+            'email' => $email,
+        ]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findOneByProviderUid(string $provider, string $uid): ?User
+    {
+        return $this->findOneBy([
+            'accountProvider' => $provider,
+            'accountUid'      => $uid,
+        ]);
+    }
 }

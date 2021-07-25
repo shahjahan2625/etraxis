@@ -7,6 +7,9 @@ parameters:
 
     env(ETRAXIS_LOCALE): en
 
+    env(LDAP_URL):    ~
+    env(LDAP_BASEDN): ~
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -44,3 +47,10 @@ services:
 
     App\EventListener\StickyLocale:
         $locale: '%env(ETRAXIS_LOCALE)%'
+
+    App\MessageHandler\Users\RegisterExternalAccountCommandHandler:
+        $locale: '%env(ETRAXIS_LOCALE)%'
+
+    App\Security\LDAP\LdapService:
+        $url:    '%env(LDAP_URL)%'
+        $basedn: '%env(LDAP_BASEDN)%'

@@ -36,4 +36,14 @@ interface UserRepositoryInterface extends ObjectRepository, Selectable
      * @see \Doctrine\Persistence\ObjectManager::refresh()
      */
     public function refresh(User $entity): void;
+
+    /**
+     * Finds user by email.
+     */
+    public function findOneByEmail(string $email): ?User;
+
+    /**
+     * Finds user by account provider and its UID.
+     */
+    public function findOneByProviderUid(string $provider, string $uid): ?User;
 }

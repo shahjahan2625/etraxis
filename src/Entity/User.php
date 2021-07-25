@@ -13,6 +13,7 @@
 
 namespace App\Entity;
 
+use App\Dictionary\AccountProvider;
 use App\Dictionary\Locale;
 use App\Dictionary\Timezone;
 use App\Repository\UserRepository;
@@ -22,12 +23,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * User.
  *
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @ORM\Table(name="users")
+ * @ORM\Table(
+ *     name="users",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(columns={"account_provider", "account_uid"})
+ *     }
+ * )
  * @Assert\UniqueEntity(fields={"email"}, message="user.conflict.email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -86,6 +93,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     protected bool $isAdmin;
 
     /**
+     * Account provider (see the "AccountProvider" dictionary).
+     *
+     * @ORM\Column(name="account_provider", type="string", length=20)
+     */
+    protected string $accountProvider;
+
+    /**
+     * Account UID as in the external provider's system.
+     *
+     * @ORM\Column(name="account_uid", type="string")
+     */
+    protected string $accountUid;
+
+    /**
      * User's settings.
      *
      * @ORM\Column(name="settings", type="json", nullable=true)
@@ -106,6 +127,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->isAdmin = false;
+
+        $this->accountProvider = AccountProvider::ETRAXIS;
+        $this->accountUid      = Uuid::v4()->toRfc4122();
 
         $this->groups = new ArrayCollection();
     }
@@ -254,6 +278,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Property getter.
      */
+    public function getAccountProvider(): string
+    {
+        return $this->accountProvider;
+    }
+
+    /**
+     * Property setter.
+     */
+    public function setAccountProvider(string $provider): self
+    {
+        if (!AccountProvider::has($provider)) {
+            throw new \UnexpectedValueException('Unknown account provider: ' . $provider);
+        }
+
+        $this->accountProvider = $provider;
+
+        return $this;
+    }
+
+    /**
+     * Property getter.
+     */
+    public function getAccountUid(): string
+    {
+        return $this->accountUid;
+    }
+
+    /**
+     * Property setter.
+     */
+    public function setAccountUid(string $uid): self
+    {
+        $this->accountUid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * Property getter.
+     */
     public function getLocale(): string
     {
         return $this->settings['locale'] ?? Locale::FALLBACK;
@@ -299,5 +363,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getGroups(): Collection
     {
         return $this->groups;
+    }
+
+    /**
+     * Checks whether the account is loaded from a 3rd party provider.
+     */
+    public function isAccountExternal(): bool
+    {
+        return $this->accountProvider !== AccountProvider::ETRAXIS;
     }
 }
