@@ -14,16 +14,18 @@
 namespace App\Security\LDAP;
 
 use App\Entity\User;
-use App\TransactionalTestCase;
+use App\Repository\Contracts\UserRepositoryInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @internal
  * @coversDefaultClass \App\Security\LDAP\LdapCredentialsChecker
  */
-final class LdapCredentialsCheckerTest extends TransactionalTestCase
+final class LdapCredentialsCheckerTest extends WebTestCase
 {
-    private LdapInterface $ldap;
+    private LdapInterface           $ldap;
+    private UserRepositoryInterface $repository;
 
     protected function setUp(): void
     {
@@ -37,6 +39,10 @@ final class LdapCredentialsCheckerTest extends TransactionalTestCase
                 ['uid=einstein,dc=example,dc=com', 'wrong', false],
             ])
         ;
+
+        $doctrine = self::getContainer()->get('doctrine');
+
+        $this->repository = $doctrine->getRepository(User::class);
     }
 
     /**
@@ -44,8 +50,7 @@ final class LdapCredentialsCheckerTest extends TransactionalTestCase
      */
     public function testSuccess(): void
     {
-        $repository = $this->doctrine->getRepository(User::class);
-        $user       = $repository->findOneByEmail('einstein@ldap.forumsys.com');
+        $user = $this->repository->findOneByEmail('einstein@ldap.forumsys.com');
 
         $credentialsChecker = new LdapCredentialsChecker($this->ldap);
 
@@ -57,8 +62,7 @@ final class LdapCredentialsCheckerTest extends TransactionalTestCase
      */
     public function testWrongPassword(): void
     {
-        $repository = $this->doctrine->getRepository(User::class);
-        $user       = $repository->findOneByEmail('einstein@ldap.forumsys.com');
+        $user = $this->repository->findOneByEmail('einstein@ldap.forumsys.com');
 
         $credentialsChecker = new LdapCredentialsChecker($this->ldap);
 
@@ -111,8 +115,7 @@ final class LdapCredentialsCheckerTest extends TransactionalTestCase
      */
     public function testInternalUser(): void
     {
-        $repository = $this->doctrine->getRepository(User::class);
-        $user       = $repository->findOneByEmail('artem@example.com');
+        $user = $this->repository->findOneByEmail('artem@example.com');
 
         $credentialsChecker = new LdapCredentialsChecker($this->ldap);
 

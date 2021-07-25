@@ -15,13 +15,13 @@ namespace App\Repository;
 
 use App\Dictionary\AccountProvider;
 use App\Entity\User;
-use App\TransactionalTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * @internal
  * @coversDefaultClass \App\Repository\UserRepository
  */
-final class UserRepositoryTest extends TransactionalTestCase
+final class UserRepositoryTest extends WebTestCase
 {
     private Contracts\UserRepositoryInterface $repository;
 
@@ -29,7 +29,9 @@ final class UserRepositoryTest extends TransactionalTestCase
     {
         parent::setUp();
 
-        $this->repository = $this->doctrine->getRepository(User::class);
+        $doctrine = self::getContainer()->get('doctrine');
+
+        $this->repository = $doctrine->getRepository(User::class);
     }
 
     /**
