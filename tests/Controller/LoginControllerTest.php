@@ -24,9 +24,9 @@ use Symfony\Component\HttpFoundation\Request;
 final class LoginControllerTest extends WebTestCase
 {
     /**
-     * @covers ::index
+     * @covers ::__invoke
      */
-    public function testIndexAnon(): void
+    public function testAnonymous(): void
     {
         $client = self::createClient();
         $client->request(Request::METHOD_GET, '/login');
@@ -35,9 +35,9 @@ final class LoginControllerTest extends WebTestCase
     }
 
     /**
-     * @covers ::index
+     * @covers ::__invoke
      */
-    public function testIndexUser(): void
+    public function testUser(): void
     {
         $client   = self::createClient();
         $doctrine = self::getContainer()->get('doctrine');

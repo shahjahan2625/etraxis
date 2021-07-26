@@ -35,7 +35,7 @@ class LoginController extends AbstractController
      *
      * @Route("/login", name="login")
      */
-    public function index(Request $request, TokenStorageInterface $tokenStorage, AuthenticationUtils $utils): Response
+    public function __invoke(Request $request, TokenStorageInterface $tokenStorage, AuthenticationUtils $utils): Response
     {
         if ($this->getUser()) {
             /** @var PostAuthenticationToken $token */

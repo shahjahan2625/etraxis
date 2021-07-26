@@ -26,7 +26,7 @@ final class DefaultControllerTest extends WebTestCase
     /**
      * @covers ::homepage
      */
-    public function testHomepageAnon(): void
+    public function testHomepageAnonymous(): void
     {
         $client = self::createClient();
         $client->request(Request::METHOD_GET, '/');
@@ -53,7 +53,7 @@ final class DefaultControllerTest extends WebTestCase
     /**
      * @covers ::admin
      */
-    public function testAdminAnon(): void
+    public function testAdminAnonymous(): void
     {
         $client = self::createClient();
         $client->request(Request::METHOD_GET, '/admin/');
