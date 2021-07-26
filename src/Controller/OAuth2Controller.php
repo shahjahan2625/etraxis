@@ -26,6 +26,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class OAuth2Controller extends AbstractController
 {
     /**
+     * OAuth2 callback URL for GitHub.
+     *
+     * @Route("/github", name="oauth2_github")
+     */
+    public function github(ClientRegistry $clientRegistry): Response
+    {
+        if ($this->getUser()) {
+            return $this->forward(LoginController::class);
+        }
+
+        return $clientRegistry->getClient('github')->redirect(['user:email'], []);
+    }
+
+    /**
      * OAuth2 callback URL for Google.
      *
      * @Route("/google", name="oauth2_google")

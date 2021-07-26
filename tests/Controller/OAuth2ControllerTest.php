@@ -24,6 +24,36 @@ use Symfony\Component\HttpFoundation\Request;
 final class OAuth2ControllerTest extends WebTestCase
 {
     /**
+     * @covers ::github
+     */
+    public function testGithubAnonymous(): void
+    {
+        $client = self::createClient();
+        $client->request(Request::METHOD_GET, '/oauth2/github');
+
+        self::assertTrue($client->getResponse()->isRedirection());
+
+        $location = $client->getResponse()->headers->get('Location');
+        self::assertMatchesRegularExpression('/^(https:\/\/github.com\/)(.)+$/i', $location);
+    }
+
+    /**
+     * @covers ::github
+     */
+    public function testGithubAuthenticated(): void
+    {
+        $client   = self::createClient();
+        $doctrine = self::getContainer()->get('doctrine');
+
+        $user = $doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
+
+        $client->loginUser($user);
+        $client->request(Request::METHOD_GET, '/oauth2/github');
+
+        self::assertTrue($client->getResponse()->isRedirect('/'));
+    }
+
+    /**
      * @covers ::google
      */
     public function testGoogleAnonymous(): void
