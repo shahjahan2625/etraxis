@@ -12,6 +12,8 @@
 
         <label><input type="checkbox" name="_remember_me">{{ 'security.remember_me' | trans }}</label>
 
+        <a href="{{ path('oauth2_google') }}">Google</a>
+
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <button type="submit">{{ 'security.login' | trans }}</button>
 

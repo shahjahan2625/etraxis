@@ -13,7 +13,9 @@
 
 namespace App\Controller;
 
+use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -23,4 +25,17 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class OAuth2Controller extends AbstractController
 {
+    /**
+     * OAuth2 callback URL for Google.
+     *
+     * @Route("/google", name="oauth2_google")
+     */
+    public function google(ClientRegistry $clientRegistry): Response
+    {
+        if ($this->getUser()) {
+            return $this->forward(LoginController::class);
+        }
+
+        return $clientRegistry->getClient('google')->redirect([], []);
+    }
 }
