@@ -13,11 +13,9 @@
 
 namespace App\MessageBus\Contracts;
 
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-
 /**
  * Marker interface for query handlers.
  */
-interface QueryHandlerInterface extends MessageHandlerInterface
+interface QueryHandlerInterface
 {
 }

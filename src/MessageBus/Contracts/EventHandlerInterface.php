@@ -13,11 +13,9 @@
 
 namespace App\MessageBus\Contracts;
 
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-
 /**
  * Marker interface for event handlers.
  */
-interface EventHandlerInterface extends MessageHandlerInterface
+interface EventHandlerInterface
 {
 }

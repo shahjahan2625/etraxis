@@ -34,7 +34,7 @@ final class OAuth2ControllerTest extends WebTestCase
         self::assertTrue($client->getResponse()->isRedirection());
 
         $location = $client->getResponse()->headers->get('Location');
-        self::assertMatchesRegularExpression('/^(https:\/\/github.com\/)(.)+$/i', $location);
+        self::assertMatchesRegularExpression('/^(https:\/\/github\.com\/)(.)+$/i', $location);
     }
 
     /**
@@ -64,7 +64,7 @@ final class OAuth2ControllerTest extends WebTestCase
         self::assertTrue($client->getResponse()->isRedirection());
 
         $location = $client->getResponse()->headers->get('Location');
-        self::assertMatchesRegularExpression('/^(https:\/\/accounts.google.com\/)(.)+$/i', $location);
+        self::assertMatchesRegularExpression('/^(https:\/\/accounts\.google\.com\/)(.)+$/i', $location);
     }
 
     /**

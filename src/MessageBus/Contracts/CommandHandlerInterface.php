@@ -13,11 +13,9 @@
 
 namespace App\MessageBus\Contracts;
 
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
-
 /**
  * Marker interface for command handlers.
  */
-interface CommandHandlerInterface extends MessageHandlerInterface
+interface CommandHandlerInterface
 {
 }
