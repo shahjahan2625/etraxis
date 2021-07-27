@@ -30,6 +30,7 @@
         "symfony/ldap": "5.3.*",
         "symfony/messenger": "5.3.*",
         "symfony/monolog-bundle": "^3.1",
+        "symfony/rate-limiter": "5.3.*",
         "symfony/runtime": "5.3.*",
         "symfony/security-bundle": "5.3.*",
         "symfony/serializer": "5.3.*",

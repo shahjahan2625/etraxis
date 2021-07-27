@@ -19,6 +19,7 @@ security:
         main:
             lazy: true
             logout: true
+            login_throttling: true
             provider: users_in_database
             entry_point: App\Security\AuthenticationEntryPoint
             custom_authenticators:
