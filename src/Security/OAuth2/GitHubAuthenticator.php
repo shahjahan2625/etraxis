@@ -33,8 +33,8 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
  */
 class GitHubAuthenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
-    private CommandBusInterface   $commandBus;
-    private OAuth2ClientInterface $client;
+    protected CommandBusInterface   $commandBus;
+    protected OAuth2ClientInterface $client;
 
     /**
      * @codeCoverageIgnore Dependency Injection constructor
