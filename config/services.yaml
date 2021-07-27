@@ -7,6 +7,9 @@ parameters:
 
     env(ETRAXIS_LOCALE): en
 
+    env(MAILER_DSN):  null://null
+    env(MAILER_FROM): noreply@example.com
+
     env(LDAP_URL):    ~
     env(LDAP_BASEDN): ~
 
@@ -53,6 +56,9 @@ services:
     # please note that last definitions always *replace* previous ones
     App\DataFixtures\ProductionFixtures:
         $locale: '%env(ETRAXIS_LOCALE)%'
+
+    App\EventListener\MessageSender:
+        $sender: '%env(MAILER_FROM)%'
 
     App\EventListener\StickyLocale:
         $locale: '%env(ETRAXIS_LOCALE)%'

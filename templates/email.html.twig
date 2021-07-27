@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html lang="{{ app.user.locale ?? locale }}" dir="{{ (app.user.locale ?? locale) | direction }}">
+    <body style="background-color: white; margin: 0;">
+        {% block message %}{% endblock %}
+    </body>
+</html>
