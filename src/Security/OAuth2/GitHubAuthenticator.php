@@ -68,6 +68,7 @@ class GitHubAuthenticator extends AbstractAuthenticator implements Authenticator
             /** @var \League\OAuth2\Client\Provider\GithubResourceOwner $owner */
             $owner = $this->client->fetchUserFromToken($token);
             $email = $owner->getEmail();
+            $name  = $owner->getName();
 
             if (!$email) {
 
@@ -81,26 +82,20 @@ class GitHubAuthenticator extends AbstractAuthenticator implements Authenticator
 
                 $response = $provider->getResponse($request);
                 $emails   = json_decode($response->getBody()->getContents(), true);
-
-                foreach ($emails as $email) {
-                    if ($email['primary'] ?? false) {
-                        $email = $email['email'];
-
-                        break;
-                    }
-                }
+                $emails   = array_map(fn ($entry) => ($entry['primary'] ?? false) ? $entry['email'] : null, $emails);
+                $emails   = array_filter($emails, fn ($entry) => $entry !== null);
+                $email    = reset($emails) ?: null;
             }
         }
         catch (\Throwable $throwable) {
             throw new AuthenticationException('Bad credentials.', 0, $throwable);
         }
 
-        $command = new RegisterExternalAccountCommand(
-            $email,
-            $owner->getName(),
-            AccountProvider::GITHUB,
-            $owner->getId()
-        );
+        if ($owner->getId() === null || $email === null || $name === null) {
+            throw new AuthenticationException('Bad credentials.');
+        }
+
+        $command = new RegisterExternalAccountCommand($email, $name, AccountProvider::GITHUB, $owner->getId());
 
         $this->commandBus->handle($command);
 

@@ -67,17 +67,18 @@ class GoogleAuthenticator extends AbstractAuthenticator implements Authenticator
 
             /** @var \League\OAuth2\Client\Provider\GoogleUser $owner */
             $owner = $this->client->fetchUserFromToken($token);
+            $email = $owner->getEmail();
+            $name  = $owner->getName();
         }
         catch (\Throwable $throwable) {
             throw new AuthenticationException('Bad credentials.', 0, $throwable);
         }
 
-        $command = new RegisterExternalAccountCommand(
-            $owner->getEmail(),
-            $owner->getName(),
-            AccountProvider::GOOGLE,
-            $owner->getId()
-        );
+        if ($owner->getId() === null || $email === null || $name === null) {
+            throw new AuthenticationException('Bad credentials.');
+        }
+
+        $command = new RegisterExternalAccountCommand($email, $name, AccountProvider::GOOGLE, $owner->getId());
 
         $this->commandBus->handle($command);
 

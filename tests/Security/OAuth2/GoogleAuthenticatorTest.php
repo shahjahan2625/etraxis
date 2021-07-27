@@ -133,6 +133,37 @@ final class GoogleAuthenticatorTest extends TransactionalTestCase
     /**
      * @covers ::authenticate
      */
+    public function testAuthenticateMissingEmail(): void
+    {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Bad credentials.');
+
+        $token = $this->createMock(AccessToken::class);
+
+        $owner = new GoogleUser([
+            'sub'  => '423729',
+            'name' => 'Anna Rodygina',
+        ]);
+
+        $client = $this->createMock(GoogleClient::class);
+        $client
+            ->method('getAccessToken')
+            ->willReturn($token)
+        ;
+        $client
+            ->method('fetchUserFromToken')
+            ->willReturn($owner)
+        ;
+
+        $authenticator = new GoogleAuthenticator($client, $this->commandBus);
+
+        $passport = $authenticator->authenticate(new Request());
+        self::assertFalse($passport->hasBadge(UserBadge::class));
+    }
+
+    /**
+     * @covers ::authenticate
+     */
     public function testAuthenticateInvalidState(): void
     {
         $this->expectException(AuthenticationException::class);

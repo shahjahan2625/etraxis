@@ -142,9 +142,8 @@ final class GitHubAuthenticatorTest extends TransactionalTestCase
         $token = $this->createMock(AccessToken::class);
 
         $owner = new GithubResourceOwner([
-            'id'    => '423729',
-            'email' => null,
-            'name'  => 'Anna Rodygina',
+            'id'   => '423729',
+            'name' => 'Anna Rodygina',
         ]);
 
         $emails = [
@@ -218,6 +217,82 @@ final class GitHubAuthenticatorTest extends TransactionalTestCase
 
         $user = $this->doctrine->getRepository(User::class)->findOneBy(['email' => 'anna@example.com']);
         self::assertNotNull($user);
+    }
+
+    /**
+     * @covers ::authenticate
+     */
+    public function testAuthenticateMissingEmail(): void
+    {
+        $this->expectException(AuthenticationException::class);
+        $this->expectExceptionMessage('Bad credentials.');
+
+        $token = $this->createMock(AccessToken::class);
+
+        $owner = new GithubResourceOwner([
+            'id'   => '423729',
+            'name' => 'Anna Rodygina',
+        ]);
+
+        $emails = [
+            [
+                'email'      => 'anna@example.com',
+                'primary'    => false,
+                'verified'   => true,
+                'visibility' => 'private',
+            ],
+            [
+                'email'      => 'anna@users.noreply.github.com',
+                'primary'    => false,
+                'verified'   => true,
+                'visibility' => null,
+            ],
+        ];
+
+        $body = $this->createMock(StreamInterface::class);
+        $body
+            ->method('getContents')
+            ->willReturn(json_encode($emails))
+        ;
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response
+            ->method('getBody')
+            ->willReturn($body)
+        ;
+
+        $provider = $this->createMock(AbstractProvider::class);
+        $provider
+            ->method('getResourceOwner')
+            ->willReturn($owner)
+        ;
+        $provider
+            ->method('getAuthenticatedRequest')
+            ->willReturn($this->createMock(RequestInterface::class))
+        ;
+        $provider
+            ->method('getResponse')
+            ->willReturn($response)
+        ;
+
+        $client = $this->createMock(GithubClient::class);
+        $client
+            ->method('getAccessToken')
+            ->willReturn($token)
+        ;
+        $client
+            ->method('fetchUserFromToken')
+            ->willReturn($owner)
+        ;
+        $client
+            ->method('getOAuth2Provider')
+            ->willReturn($provider)
+        ;
+
+        $authenticator = new GitHubAuthenticator($client, $this->commandBus);
+
+        $passport = $authenticator->authenticate(new Request());
+        self::assertFalse($passport->hasBadge(UserBadge::class));
     }
 
     /**

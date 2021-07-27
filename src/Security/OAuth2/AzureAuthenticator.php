@@ -67,17 +67,18 @@ class AzureAuthenticator extends AbstractAuthenticator implements AuthenticatorI
 
             /** @var \TheNetworg\OAuth2\Client\Provider\AzureResourceOwner $owner */
             $owner = $this->client->fetchUserFromToken($token);
+            $email = $owner->claim('email');
+            $name  = $owner->claim('name');
         }
         catch (\Throwable $throwable) {
             throw new AuthenticationException('Bad credentials.', 0, $throwable);
         }
 
-        $command = new RegisterExternalAccountCommand(
-            $owner->claim('email'),
-            $owner->claim('name'),
-            AccountProvider::AZURE,
-            $owner->getId()
-        );
+        if ($owner->getId() === null || $email === null || $name === null) {
+            throw new AuthenticationException('Bad credentials.');
+        }
+
+        $command = new RegisterExternalAccountCommand($email, $name, AccountProvider::AZURE, $owner->getId());
 
         $this->commandBus->handle($command);
 
