@@ -22,6 +22,7 @@ security:
             provider: users_in_database
             entry_point: App\Security\AuthenticationEntryPoint
             custom_authenticators:
+                - App\Security\OAuth2\AzureAuthenticator
                 - App\Security\OAuth2\GitHubAuthenticator
                 - App\Security\OAuth2\GoogleAuthenticator
                 - App\Security\LDAP\LdapAuthenticator

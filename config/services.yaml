@@ -10,6 +10,9 @@ parameters:
     env(LDAP_URL):    ~
     env(LDAP_BASEDN): ~
 
+    env(OAUTH_AZURE_CLIENT_ID):     ~
+    env(OAUTH_AZURE_CLIENT_SECRET): ~
+
     env(OAUTH_GITHUB_CLIENT_ID):     ~
     env(OAUTH_GITHUB_CLIENT_SECRET): ~
 

@@ -1,6 +1,23 @@
 knpu_oauth2_client:
     clients:
         # configure your clients as described here: https://github.com/knpuniversity/oauth2-client-bundle#configuration
+        azure:
+            type: azure
+            client_id: '%env(OAUTH_AZURE_CLIENT_ID)%'
+            client_secret: '%env(OAUTH_AZURE_CLIENT_SECRET)%'
+            redirect_route: oauth2_azure
+            redirect_params: {}
+            # url_login: 'https://login.microsoftonline.com/'
+            # path_authorize: '/oauth2/authorize'
+            # path_token: '/oauth2/token'
+            scope: [ 'openid', 'profile', 'email' ]
+            # tenant: 'common'
+            # url_api: 'https://graph.windows.net/'
+            # resource: null
+            # api_version: '1.6'
+            # auth_with_resource: true
+            default_end_point_version: '2.0'
+            # use_state: true
         github:
             type: github
             client_id: '%env(OAUTH_GITHUB_CLIENT_ID)%'

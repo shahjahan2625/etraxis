@@ -26,6 +26,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class OAuth2Controller extends AbstractController
 {
     /**
+     * OAuth2 callback URL for Microsoft Azure.
+     *
+     * @Route("/azure", name="oauth2_azure")
+     */
+    public function azure(ClientRegistry $clientRegistry): Response
+    {
+        if ($this->getUser()) {
+            return $this->forward(LoginController::class);
+        }
+
+        return $clientRegistry->getClient('azure')->redirect([], []);
+    }
+
+    /**
      * OAuth2 callback URL for GitHub.
      *
      * @Route("/github", name="oauth2_github")

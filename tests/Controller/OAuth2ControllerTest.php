@@ -24,6 +24,36 @@ use Symfony\Component\HttpFoundation\Request;
 final class OAuth2ControllerTest extends WebTestCase
 {
     /**
+     * @covers ::azure
+     */
+    public function testAzureAnonymous(): void
+    {
+        $client = self::createClient();
+        $client->request(Request::METHOD_GET, '/oauth2/azure');
+
+        self::assertTrue($client->getResponse()->isRedirection());
+
+        $location = $client->getResponse()->headers->get('Location');
+        self::assertMatchesRegularExpression('/^(https:\/\/login\.microsoftonline\.com\/)(.)+$/i', $location);
+    }
+
+    /**
+     * @covers ::azure
+     */
+    public function testAzureAuthenticated(): void
+    {
+        $client   = self::createClient();
+        $doctrine = self::getContainer()->get('doctrine');
+
+        $user = $doctrine->getRepository(User::class)->findOneBy(['email' => 'artem@example.com']);
+
+        $client->loginUser($user);
+        $client->request(Request::METHOD_GET, '/oauth2/azure');
+
+        self::assertTrue($client->getResponse()->isRedirect('/'));
+    }
+
+    /**
      * @covers ::github
      */
     public function testGithubAnonymous(): void
